@@ -8,13 +8,20 @@ import co.edu.autonoma.elementos.Drawable;
 import co.edu.autonoma.elementos.GameWorld;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Julian
  */
-public class GameWindow extends javax.swing.JFrame implements Drawable{
+public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
     private GameWorld gameWorld;
+    private static Thread thread;
+    private static volatile boolean isWorking = false;
+    
+    private static int aps = 0;
+    private static int fps = 0;
     /**
      * Creates new form GameWindow
      */
@@ -32,6 +39,7 @@ public class GameWindow extends javax.swing.JFrame implements Drawable{
     public void paint(Graphics g){
         gameWorld.draw(g);
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -80,19 +88,36 @@ public class GameWindow extends javax.swing.JFrame implements Drawable{
         GameWindow window = new GameWindow();
         GameWorld gameWorld = new GameWorld(window.getWidth(), window.getHeight());
         window.setGameWorld(gameWorld);
+        window.iniciar();
         
         window.setTitle("Berserk Game");
         window.setVisible(true);
     }
     
-    public void iniciar(){
-        
+    public synchronized void iniciar(){
+        isWorking = true;
+        thread = new Thread(this, "Graficos");
+        thread.start();
     }
     
-    public void detener(){
+    public synchronized void detener(){
+        isWorking = false;
         
+        try {
+            thread.join();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 
+    public void actualizar(){
+        aps++;
+    }
+    
+    public void mostrar(){
+        fps++;
+    }
+    
     @Override
     public void redraw() {
         repaint();
@@ -101,6 +126,40 @@ public class GameWindow extends javax.swing.JFrame implements Drawable{
     @Override
     public void redraw(int x, int y, int width, int height) {
         repaint(x, y, width, height);
+    }
+
+    @Override
+    public void run() {
+        final int NS_POR_SEGUNDO = 1000000000;
+        final byte APS_OBJETIVO = 60;
+        final double NS_POR_ACTUALIZACION = NS_POR_SEGUNDO/APS_OBJETIVO;
+        
+        long referenciaActualizacion = System.nanoTime();
+        long referenciaContador = System.nanoTime();
+        
+        double tiempoTranscurrido;
+        double delta = 0;
+        
+        while(isWorking){
+            final long inicioBucle = System.nanoTime();
+            
+            tiempoTranscurrido = inicioBucle - referenciaActualizacion;
+            referenciaActualizacion = inicioBucle;
+            
+            delta += tiempoTranscurrido/NS_POR_ACTUALIZACION;
+            while(delta >= 1){
+                actualizar();
+                delta--;
+            }
+            mostrar();
+            
+            if (System.nanoTime() - referenciaContador > NS_POR_SEGUNDO){
+                setTitle("BERSERK GAME" + " || APS: " + aps + "|| FPS: " + fps);
+                aps = 0;
+                fps = 0;
+                referenciaContador = System.nanoTime();
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
