@@ -31,6 +31,11 @@ public abstract class Entity {
     public Rectangle getBounds() {
         return new Rectangle((int) point.getX(), (int) point.getY(), ancho, alto);
     }
+
+    public Point2D getPoint() {
+        return point;
+    }
+    
     
     public void draw(Graphics2D g2d){}
     
