@@ -36,6 +36,7 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
         gameWorld.setDrawable(this);
     }
 
+    @Override
     public void paint(Graphics g){
         gameWorld.draw(g);
     }
@@ -106,7 +107,6 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
         try {
             thread.join();
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
         }
     }
 
