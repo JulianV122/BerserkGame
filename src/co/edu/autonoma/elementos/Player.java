@@ -27,10 +27,9 @@ public class Player extends Sprite {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.red);
-        g.fillRect(x, y, width, height);
-    }
-    
+            g.setColor(Color.red);
+            g.fillRect(x, y, width, height);
+    }    
     public void handleKey(int key)
     {
         if(key == KeyEvent.VK_LEFT |
@@ -38,11 +37,12 @@ public class Player extends Sprite {
            key == KeyEvent.VK_UP |
            key == KeyEvent.VK_DOWN)
         {
-            if(move(key))
+            if(move(key)){
                 if(drawable != null){
-                    drawable.redraw(pastx, pasty, width, height);
                     drawable.redraw(x, y, width, height);
+                    drawable.redraw(pastx, pasty, width, height);
                 }
+            }
         }
     }
     
