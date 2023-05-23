@@ -4,6 +4,7 @@
  */
 package co.edu.autonoma.gui;
 
+import Graficos.Pantalla;
 import co.edu.autonoma.elementos.Drawable;
 import co.edu.autonoma.elementos.GameWorld;
 import co.edu.autonoma.elementos.Monstruo;
@@ -23,6 +24,12 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
     
     private static int aps = 0;
     private static int fps = 0;
+    private static int x=0;
+    private static int y=0;
+    private static Pantalla pantalla;
+    private static BufferedImage imagen = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private static int [] pixeles = ((DataBufferInt) imagen.getRaster().getDataBuffer()).getData();
+    
     /**
      * Creates new form GameWindow
      */
@@ -30,6 +37,7 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);
+        pantalla = new Pantalla(WIDTH, HEIGHT);
     }
     
     public void setGameWorld(GameWorld gameWorld){
@@ -39,7 +47,7 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
 
     @Override
     public void paint(Graphics g){
-        gameWorld.draw(g);
+        //gameWorld.draw(g);
     }
     
     public static void main(String args[]) throws IOException {
@@ -92,6 +100,7 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
            evt.getKeyCode() == KeyEvent.VK_LEFT |
            evt.getKeyCode() == KeyEvent.VK_RIGHT)
             gameWorld.handleKey(evt.getKeyCode());
+        aps++;
     }//GEN-LAST:event_formKeyPressed
 
 
@@ -115,6 +124,25 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
     }
     
     public void mostrar(){
+        BufferStrategy estrategia = getBufferStrategy();
+        
+        if (estrategia == null){
+            createBufferStrategy(3);
+            return;
+        }
+        pantalla.limpiar();
+        pantalla.mostrar(x, y);
+        
+        System.arraycopy(pantalla.pixeles, 0, pixeles, 0, pixeles.length);
+        
+//        for (int i=0; i< pixeles.length; i++){
+//            pixeles[i] = pantalla.pixeles[i];
+//        }
+
+        Graphics g = estrategia.getDrawGraphics();
+        g.drawImage(imagen, 0, 0, getWidth(),getHeight(),null);
+        g.dispose();
+        estrategia.show();
         fps++;
     }
     
