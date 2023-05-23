@@ -9,9 +9,12 @@ import co.edu.autonoma.elementos.Drawable;
 import co.edu.autonoma.elementos.GameWorld;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+<<<<<<< HEAD
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+=======
+>>>>>>> parent of 26c4fb3 (cambios en el dibujado)
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,17 +54,6 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
     public void paint(Graphics g){
         //gameWorld.draw(g);
     }
-    
-    public static void main(String args[]) {
-        GameWindow window = new GameWindow();
-        GameWorld gameWorld = new GameWorld(window.getWidth(), window.getHeight());
-        window.setGameWorld(gameWorld);
-        window.iniciar();
-        
-        window.setTitle("Berserk Game");
-        window.setVisible(true);
-    }
-
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -105,6 +97,18 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
         aps++;
     }//GEN-LAST:event_formKeyPressed
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        GameWindow window = new GameWindow();
+        GameWorld gameWorld = new GameWorld(window.getWidth(), window.getHeight());
+        window.setGameWorld(gameWorld);
+        window.iniciar();
+        
+        window.setTitle("Berserk Game");
+        window.setVisible(true);
+    }
     
     public synchronized void iniciar(){
         isWorking = true;

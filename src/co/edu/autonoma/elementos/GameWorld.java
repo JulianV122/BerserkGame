@@ -25,7 +25,7 @@ public class GameWorld extends Sprite implements Dimensionable, Drawable{
     public GameWorld(int width, int height) {
         super(0, 0, width, height);
         player = new Player(width/2, height/2);
-        player.setArea(this);
+        player.setArea(area);
         player.setDrawable(this);
     }
 
@@ -43,11 +43,10 @@ public class GameWorld extends Sprite implements Dimensionable, Drawable{
     }
     @Override
     public void draw(Graphics g) {
-        
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(x, y, width, height);
         try {
             image = ImageIO.read(new File("src\\co\\edu\\autonoma\\imagenes\\Background.png"));
-            g.setColor(Color.DARK_GRAY);
-            g.fillRect(x, y, width, height);
             Graphics2D g2d = (Graphics2D) g;
             g2d.translate(x, y);
             g2d.drawImage(image, null, null);
@@ -55,8 +54,6 @@ public class GameWorld extends Sprite implements Dimensionable, Drawable{
             e.printStackTrace();
         }
         player.draw(g);
-        
-        
     }
 
     @Override
