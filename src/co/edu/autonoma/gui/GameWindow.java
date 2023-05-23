@@ -7,11 +7,8 @@ package co.edu.autonoma.gui;
 import Graficos.Pantalla;
 import co.edu.autonoma.elementos.Drawable;
 import co.edu.autonoma.elementos.GameWorld;
-import co.edu.autonoma.elementos.Monstruo;
-
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 /**
  *
@@ -50,7 +47,7 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
         //gameWorld.draw(g);
     }
     
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
         GameWindow window = new GameWindow();
         GameWorld gameWorld = new GameWorld(window.getWidth(), window.getHeight());
         window.setGameWorld(gameWorld);
@@ -103,7 +100,7 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
         aps++;
     }//GEN-LAST:event_formKeyPressed
 
-
+    
     public synchronized void iniciar(){
         isWorking = true;
         thread = new Thread(this, "Graficos");
@@ -159,34 +156,28 @@ public class GameWindow extends javax.swing.JFrame implements Drawable,Runnable{
     @Override
     public void run() {
         final int NS_POR_SEGUNDO = 1000000000;
-        final byte APS_OBJETIVO = 60; // Ajustar la frecuencia de actualización deseada
+        final byte APS_OBJETIVO = 60;
         final double NS_POR_ACTUALIZACION = NS_POR_SEGUNDO/APS_OBJETIVO;
-
-
+        
         long referenciaActualizacion = System.nanoTime();
         long referenciaContador = System.nanoTime();
-
+        
         double tiempoTranscurrido;
         double delta = 0;
-
+        
         while(isWorking){
             final long inicioBucle = System.nanoTime();
-
+            
             tiempoTranscurrido = inicioBucle - referenciaActualizacion;
             referenciaActualizacion = inicioBucle;
-
+            
             delta += tiempoTranscurrido/NS_POR_ACTUALIZACION;
             while(delta >= 1){
-                for (Monstruo monstruo : gameWorld.getMonstruos()) {
-                    monstruo.move(gameWorld.getMonstruos());
-                    
-                }
-                gameWorld.draw(this.getGraphics());
                 actualizar();
                 delta--;
             }
             mostrar();
-
+            
             if (System.nanoTime() - referenciaContador > NS_POR_SEGUNDO){
                 setTitle("BERSERK GAME" + " || APS: " + aps + "|| FPS: " + fps);
                 aps = 0;
